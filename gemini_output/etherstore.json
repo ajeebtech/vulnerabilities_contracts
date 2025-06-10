@@ -1,0 +1,46 @@
+{
+  "contract": "EtherStore.sol",
+  "tool": "mythril",
+  "start": 1698796800,
+  "end": 1698796810,
+  "duration": 10,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "EtherStore.sol",
+        "function": "withdrawFunds(uint256)",
+        "lineno": 20,
+        "code": "require(msg.sender.call.value(_weiToWithdraw)());",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The call to msg.sender.call.value(_weiToWithdraw)() does not check the return value. If the call fails, the transaction continues and state changes occur after the failed external call. This can lead to unexpected behavior and potential loss of funds.  Specifically, the balances are updated and the lastWithdrawTime is modified even if the `call` fails. This means a user can withdraw their funds, the call fails, but the user's balance and withdrawal time are still updated as if the withdrawal succeeded.",
+        "address": 20,
+        "debug": "The call to msg.sender.call.value(_weiToWithdraw)() doesn't check its return value. A failed call could lead to unexpected state changes and vulnerabilities."
+      },
+      {
+        "filename": "EtherStore.sol",
+        "function": "withdrawFunds(uint256)",
+        "lineno": 21,
+        "code": "balances[msg.sender] -= _weiToWithdraw;",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The state change `balances[msg.sender] -= _weiToWithdraw;` occurs after an external call `msg.sender.call.value(_weiToWithdraw)()`. This can lead to a reentrancy vulnerability. An attacker could potentially call the `withdrawFunds` function again from within the external call and withdraw more funds than they are entitled to. This can drain the contract.",
+        "address": 21,
+        "debug": "The subtraction from balances happens after the external call, enabling reentrancy."
+      },
+      {
+        "filename": "EtherStore.sol",
+        "function": "withdrawFunds(uint256)",
+        "lineno": 22,
+        "code": "lastWithdrawTime[msg.sender] = now;",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The state change `lastWithdrawTime[msg.sender] = now;` occurs after an external call `msg.sender.call.value(_weiToWithdraw)()`. This can lead to a reentrancy vulnerability. An attacker could potentially call the `withdrawFunds` function again from within the external call and manipulate `lastWithdrawTime` multiple times in a single transaction. While it might not directly drain funds, it breaks the intended withdrawal time constraint.",
+        "address": 22,
+        "debug": "The updating of lastWithdrawTime happens after the external call, enabling reentrancy to potentially bypass the time constraint logic."
+      }
+    ]
+  }
+}

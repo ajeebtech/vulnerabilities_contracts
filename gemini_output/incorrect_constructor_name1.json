@@ -1,0 +1,35 @@
+{
+  "contract": "Missing.sol",
+  "tool": "mythril",
+  "start": 1698864000,
+  "end": 1698864010,
+  "duration": 10,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "Missing.sol",
+        "function": "IamMissing()",
+        "lineno": 17,
+        "code": "owner = msg.sender;",
+        "title": "Access control vulnerability",
+        "type": "Warning",
+        "description": "The function `IamMissing()` is intended to be the constructor but has the wrong name. This means that anyone can call `IamMissing()` and overwrite the owner, leading to unauthorized access and potential compromise of the contract.",
+        "address": 17,
+        "debug": "Anyone can call IamMissing() and change the owner"
+      },
+      {
+        "filename": "Missing.sol",
+        "function": "withdraw()",
+        "lineno": 26,
+        "code": "owner.transfer(this.balance);",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The function `withdraw()` transfers the contract's balance to the owner. If the owner is a contract, this call could trigger a reentrancy vulnerability if the fallback function of the owner contract calls back into this contract before the `transfer()` call completes. This could lead to unexpected behavior or potential loss of funds if the contract state is modified in the fallback function.",
+        "address": 26,
+        "debug": "External call to owner followed by no state change"
+      }
+    ]
+  }
+}

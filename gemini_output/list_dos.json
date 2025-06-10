@@ -1,0 +1,123 @@
+{
+  "contract": "Government.sol",
+  "tool": "mythril",
+  "start": 1701977519,
+  "end": 1701977527,
+  "duration": 8,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "Government.sol",
+        "function": "lendGovernmentMoney(address)",
+        "lineno": 52,
+        "code": "msg.sender.send(amount);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The return value of a send() call is not checked. If the call fails, the caller will not be aware of it. It is recommended to use a safe transfer library.",
+        "address": 52,
+        "debug": "The call to msg.sender.send(amount) does not check the return value. If the send fails, the caller will not know, potentially leading to unexpected state."
+      },
+      {
+        "filename": "Government.sol",
+        "function": "lendGovernmentMoney(address)",
+        "lineno": 55,
+        "code": "creditorAddresses[creditorAddresses.length - 1].send(profitFromCrash);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The return value of a send() call is not checked. If the call fails, the caller will not be aware of it. It is recommended to use a safe transfer library.",
+        "address": 55,
+        "debug": "The call to creditorAddresses[creditorAddresses.length - 1].send(profitFromCrash) does not check the return value. If the send fails, the caller will not know, potentially leading to unexpected state."
+      },
+      {
+        "filename": "Government.sol",
+        "function": "lendGovernmentMoney(address)",
+        "lineno": 56,
+        "code": "corruptElite.send(this.balance);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The return value of a send() call is not checked. If the call fails, the caller will not be aware of it. It is recommended to use a safe transfer library.",
+        "address": 56,
+        "debug": "The call to corruptElite.send(this.balance) does not check the return value. If the send fails, the caller will not know, potentially leading to unexpected state."
+      },
+      {
+        "filename": "Government.sol",
+        "function": "lendGovernmentMoney(address)",
+        "lineno": 76,
+        "code": "corruptElite.send(amount * 5/100);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The return value of a send() call is not checked. If the call fails, the caller will not be aware of it. It is recommended to use a safe transfer library.",
+        "address": 76,
+        "debug": "The call to corruptElite.send(amount * 5/100) does not check the return value. If the send fails, the caller will not know, potentially leading to unexpected state."
+      },
+      {
+        "filename": "Government.sol",
+        "function": "lendGovernmentMoney(address)",
+        "lineno": 81,
+        "code": "buddy.send(amount * 5/100);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The return value of a send() call is not checked. If the call fails, the caller will not be aware of it. It is recommended to use a safe transfer library.",
+        "address": 81,
+        "debug": "The call to buddy.send(amount * 5/100) does not check the return value. If the send fails, the caller will not know, potentially leading to unexpected state."
+      },
+      {
+        "filename": "Government.sol",
+        "function": "lendGovernmentMoney(address)",
+        "lineno": 86,
+        "code": "creditorAddresses[lastCreditorPayedOut].send(creditorAmounts[lastCreditorPayedOut]);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The return value of a send() call is not checked. If the call fails, the caller will not be aware of it. It is recommended to use a safe transfer library.",
+        "address": 86,
+        "debug": "The call to creditorAddresses[lastCreditorPayedOut].send(creditorAmounts[lastCreditorPayedOut]) does not check the return value. If the send fails, the caller will not know, potentially leading to unexpected state."
+      },
+      {
+        "filename": "Government.sol",
+        "function": "lendGovernmentMoney(address)",
+        "lineno": 91,
+        "code": "msg.sender.send(amount);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The return value of a send() call is not checked. If the call fails, the caller will not be aware of it. It is recommended to use a safe transfer library.",
+        "address": 91,
+        "debug": "The call to msg.sender.send(amount) does not check the return value. If the send fails, the caller will not know, potentially leading to unexpected state."
+      },
+      {
+        "filename": "Government.sol",
+        "function": "lendGovernmentMoney(address)",
+        "lineno": 86,
+        "code": "creditorAddresses[lastCreditorPayedOut].send(creditorAmounts[lastCreditorPayedOut]);",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "State change after external call: An external call to creditorAddresses[lastCreditorPayedOut] at line 86 changes the contract's state by incrementing lastCreditorPayedOut. This could lead to a reentrancy vulnerability.",
+        "address": 86,
+        "debug": "The contract state is changed after an external call to creditorAddresses[lastCreditorPayedOut]. This might lead to a reentrancy attack if the called contract attempts to call back into this contract."
+      },
+      {
+        "filename": "Government.sol",
+        "function": "totalDebt()",
+        "lineno": 106,
+        "code": "debt += creditorAmounts[i];",
+        "title": "Integer Overflow",
+        "type": "Warning",
+        "description": "The addition operation can overflow.",
+        "address": 106,
+        "debug": "The result of the addition operation is not checked for overflows. This can lead to unexpected behavior if the result exceeds the maximum value of a uint."
+      },
+      {
+        "filename": "Government.sol",
+        "function": "totalPayedOut()",
+        "lineno": 112,
+        "code": "payout += creditorAmounts[i];",
+        "title": "Integer Overflow",
+        "type": "Warning",
+        "description": "The addition operation can overflow.",
+        "address": 112,
+        "debug": "The result of the addition operation is not checked for overflows. This can lead to unexpected behavior if the result exceeds the maximum value of a uint."
+      }
+    ]
+  }
+}

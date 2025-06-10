@@ -1,0 +1,35 @@
+{
+  "contract": "MultiOwnable.sol",
+  "tool": "mythril",
+  "start": 1698864000,
+  "end": 1698864010,
+  "duration": 10,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "MultiOwnable.sol",
+        "function": "newOwner(address)",
+        "lineno": 32,
+        "code": "function newOwner(address _owner) external returns (bool) {",
+        "title": "Access control vulnerability",
+        "type": "Warning",
+        "description": "The function `newOwner(address)` lacks an `onlyOwner` modifier. This allows anyone to assign new owners, potentially granting unauthorized control over the contract. This can lead to malicious actors taking over the contract and performing actions such as stealing funds or modifying critical contract parameters.",
+        "address": 32,
+        "debug": "Anyone can call `newOwner(address)` to add a new owner, potentially bypassing access controls."
+      },
+      {
+        "filename": "TestContract.sol",
+        "function": "withdrawAll()",
+        "lineno": 47,
+        "code": "msg.sender.transfer(this.balance);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The call to `transfer` does not check the return value. If the transfer fails, the transaction will revert, but if the gas cost for the transfer is higher than the gas limit set by the sender the transfer will fail silently. This can result in funds being locked in the contract.",
+        "address": 47,
+        "debug": "The `transfer` function's return value is not checked, potentially leading to funds being locked if the transfer fails."
+      }
+    ]
+  }
+}

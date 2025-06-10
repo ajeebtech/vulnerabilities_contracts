@@ -1,0 +1,24 @@
+{
+  "contract": "DosOneFunc.sol",
+  "tool": "mythril",
+  "start": 1698796800,
+  "end": 1698796810,
+  "duration": 10,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "DosOneFunc.sol",
+        "function": "ifillArray()",
+        "lineno": 9,
+        "code": "for(uint i=0;i<350;i++) {",
+        "title": "Denial of Service",
+        "type": "Warning",
+        "description": "The `ifillArray()` function's loop adds 350 elements to the `listAddresses` array in each call.  If the array's length is less than 1500, the loop will execute. Repeated calls to `ifillArray()` can cause the gas cost to exceed the block gas limit, leading to a denial of service. Specifically, after 4 calls, the array's length will be greater than or equal to 1400, and the next call will push another 350 elements, causing the gas limit to be exceeded. This could also be combined with the reset function functionality that occurs if the array size is already over 1500. This would cause the contract to possibly be bricked or unusable.",
+        "address": 9,
+        "debug": "The `ifillArray` function contains a loop that iterates 350 times. This operation could consume a large amount of gas, potentially exceeding the block gas limit and causing a denial-of-service vulnerability. A user can continuously call this function until the gas cost is too high for others to interact with the contract."
+      }
+    ]
+  }
+}

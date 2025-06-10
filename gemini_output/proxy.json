@@ -1,0 +1,35 @@
+{
+  "contract": "Proxy.sol",
+  "tool": "mythril",
+  "start": 1698873600,
+  "end": 1698873610,
+  "duration": 10,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "Proxy.sol",
+        "function": "forward(address,bytes)",
+        "lineno": 13,
+        "code": "require(callee.delegatecall(_data)); //Use delegatecall with caution and make sure to never call into untrusted contracts",
+        "title": "Unchecked low-level call",
+        "type": "Warning",
+        "description": "The contract uses delegatecall to forward calls to an arbitrary address. If the target address is controlled by an attacker, they can execute arbitrary code in the context of the Proxy contract. This includes changing the owner, stealing funds, or permanently bricking the contract. The delegatecall return value is checked with require, but this only verifies success/failure of the call, not the behavior of the called contract. This is particularly dangerous if the callee has a different storage layout than the Proxy contract, leading to storage collisions and potential data corruption.",
+        "address": 13,
+        "debug": "The function `forward(address,bytes)` at Proxy.sol:13 uses delegatecall to an arbitrary address provided by the caller. This allows the caller to execute arbitrary code in the context of the Proxy contract. If the caller is malicious, they can take control of the contract by calling a function that modifies the contract's state in an unintended way."
+      },
+      {
+        "filename": "Proxy.sol",
+        "function": "forward(address,bytes)",
+        "lineno": 13,
+        "code": "require(callee.delegatecall(_data)); //Use delegatecall with caution and make sure to never call into untrusted contracts",
+        "title": "Access control vulnerability",
+        "type": "Informational",
+        "description": "The `forward` function in the Proxy contract does not have any access control restrictions. Any user can call this function and execute arbitrary code in the context of the Proxy contract, as the target address for the delegatecall is provided by the user. While the code contains a comment warning about untrusted contracts, the functionality itself is still vulnerable if the user supplies a malicious contract address. An attacker could potentially use this to gain ownership or control of the contract.",
+        "address": 13,
+        "debug": "The function `forward(address,bytes)` at Proxy.sol:13 uses delegatecall without checking the caller's permissions. This allows anyone to call the function."
+      }
+    ]
+  }
+}

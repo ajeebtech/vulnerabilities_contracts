@@ -1,0 +1,46 @@
+{
+  "contract": "PredictTheBlockHashChallenge.sol",
+  "tool": "mythril",
+  "start": 1701987458,
+  "end": 1701987458,
+  "duration": 0,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "PredictTheBlockHashChallenge.sol",
+        "function": "lockInGuess(bytes32)",
+        "lineno": 26,
+        "code": "guesses[msg.sender].block  = block.number + 1;",
+        "title": "Dependence on predictable environment variable",
+        "type": "Warning",
+        "description": "The smart contract relies on block.number to determine the block number for the guess, which can be manipulated by an attacker. Specifically, the contract stores block.number + 1. An attacker can exploit this by predicting or influencing future block numbers. While block.number itself isn't directly predictable, the contract's logic relies on it which can be gamed.",
+        "address": 26,
+        "debug": "block.number is used to determine the block number for the guess, which is predictable."
+      },
+      {
+        "filename": "PredictTheBlockHashChallenge.sol",
+        "function": "settle()",
+        "lineno": 32,
+        "code": "bytes32 answer = blockhash(guesses[msg.sender].block);",
+        "title": "Dependence on predictable environment variable",
+        "type": "Warning",
+        "description": "The blockhash function is used to retrieve the hash of a previous block. However, blockhash only returns valid hashes for the most recent 256 blocks; otherwise, it returns zero. An attacker can exploit this by guessing that the blockhash will be zero and waiting for the block number to be more than 256 blocks in the past. Since blockhash returns zero for block numbers older than 256, the guess will match, and the attacker will receive the payout.",
+        "address": 32,
+        "debug": "blockhash(block.number) is used to retrieve the hash of a previous block. It can return 0."
+      },
+      {
+        "filename": "PredictTheBlockHashChallenge.sol",
+        "function": "settle()",
+        "lineno": 36,
+        "code": "msg.sender.transfer(2 ether);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The transfer function's return value is not checked. If the transfer fails (e.g., due to the recipient being a contract that rejects the ether), the transaction will revert. However, in some scenarios, the transfer might fail silently due to the 2300 gas stipend, creating unexpected behavior.",
+        "address": 36,
+        "debug": "transfer() returns bool, but its return value is ignored."
+      }
+    ]
+  }
+}

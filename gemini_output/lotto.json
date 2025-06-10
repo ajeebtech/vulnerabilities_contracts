@@ -1,0 +1,46 @@
+{
+  "contract": "Lotto.sol",
+  "tool": "mythril",
+  "start": 1687276800,
+  "end": 1687276860,
+  "duration": 60,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "Lotto.sol",
+        "function": "sendToWinner()",
+        "lineno": 14,
+        "code": "winner.send(winAmount);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The call to winner.send(winAmount) at Lotto.sol:14 does not check the return value of the send() function. If the transfer fails, the execution continues and the payedOut state variable will be set to true, potentially leading to a loss of funds if the winner doesn't receive their winnings. It is recommended to check the return value and revert the transaction if the transfer fails.",
+        "address": 14,
+        "debug": "Unchecked return value from send() operation"
+      },
+      {
+        "filename": "Lotto.sol",
+        "function": "sendToWinner()",
+        "lineno": 15,
+        "code": "payedOut = true;",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The contract performs a state change after an external call to winner.send(winAmount) at Lotto.sol:14. An attacker could trigger a reentrancy attack in the winner's fallback function to repeatedly withdraw funds before payedOut is set to true. Consider using the Checks-Effects-Interactions pattern by updating the state before the external call.",
+        "address": 15,
+        "debug": "State change after external call vulnerability"
+      },
+      {
+        "filename": "Lotto.sol",
+        "function": "withdrawLeftOver()",
+        "lineno": 19,
+        "code": "msg.sender.send(this.balance);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The call to msg.sender.send(this.balance) at Lotto.sol:19 does not check the return value of the send() function. If the transfer fails, the execution continues. This can lead to a denial of service if the contract balance cannot be withdrawn. It is recommended to check the return value of the send() and revert the transaction if it fails.",
+        "address": 19,
+        "debug": "Unchecked return value from send() operation"
+      }
+    ]
+  }
+}

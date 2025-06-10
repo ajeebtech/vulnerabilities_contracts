@@ -1,0 +1,57 @@
+{
+  "contract": "Wallet.sol",
+  "tool": "mythril",
+  "start": 1704389805,
+  "end": 1704389808,
+  "duration": 2.885,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "Wallet.sol",
+        "function": "Wallet(address[],uint256,uint256)",
+        "lineno": 334,
+        "code": "delegatecall(sub(gas, 10000), target, 0x0, add(argsize, 0x4), 0x0, 0x0)",
+        "title": "Unchecked low-level call",
+        "type": "Warning",
+        "description": "The contract performs a delegatecall to an address provided as constructor argument. It is advisable to check that the return value of the delegatecall is true, and to ensure that the callee contract is trusted.  The delegatecall return value is not checked. Failure to check the return value means that if the delegatecall fails (e.g. due to an exception, or due to running out of gas), this will not be detected, potentially causing the program to misbehave.",
+        "address": 334,
+        "debug": "Wallet.sol:334 - delegatecall(sub(gas, 10000), target, 0x0, add(argsize, 0x4), 0x0, 0x0)"
+      },
+      {
+        "filename": "Wallet.sol",
+        "function": "()",
+        "lineno": 347,
+        "code": "_walletLibrary.delegatecall(msg.data)",
+        "title": "Unchecked low-level call",
+        "type": "Warning",
+        "description": "The contract directly executes code/calls functions of another contract through delegatecall(). The contract does not sufficiently control the code that is executed. If the other contract can be compromised, it may execute arbitrary code in the context of the current contract. The delegatecall can call any arbitrary function with arbitrary data which can lead to security issues and unexpected behaviour. It's advisable to restrict delegatecall to trusted contracts, specific functions or to implement checks on the msg.data to prevent unwanted behaviour.",
+        "address": 347,
+        "debug": "Wallet.sol:347 - _walletLibrary.delegatecall(msg.data)"
+      },
+      {
+        "filename": "Wallet.sol",
+        "function": "hasConfirmed(bytes32,address)",
+        "lineno": 358,
+        "code": "return _walletLibrary.delegatecall(msg.data)",
+        "title": "Unchecked low-level call",
+        "type": "Warning",
+        "description": "The contract directly executes code/calls functions of another contract through delegatecall(). The contract does not sufficiently control the code that is executed. If the other contract can be compromised, it may execute arbitrary code in the context of the current contract. The delegatecall can call any arbitrary function with arbitrary data which can lead to security issues and unexpected behaviour. It's advisable to restrict delegatecall to trusted contracts, specific functions or to implement checks on the msg.data to prevent unwanted behaviour.",
+        "address": 358,
+        "debug": "Wallet.sol:358 - return _walletLibrary.delegatecall(msg.data)"
+      },
+      {
+        "filename": "Wallet.sol",
+        "function": "isOwner(address)",
+        "lineno": 362,
+        "code": "return _walletLibrary.delegatecall(msg.data)",
+        "title": "Unchecked low-level call",
+        "type": "Warning",
+        "description": "The contract directly executes code/calls functions of another contract through delegatecall(). The contract does not sufficiently control the code that is executed. If the other contract can be compromised, it may execute arbitrary code in the context of the current contract. The delegatecall can call any arbitrary function with arbitrary data which can lead to security issues and unexpected behaviour. It's advisable to restrict delegatecall to trusted contracts, specific functions or to implement checks on the msg.data to prevent unwanted behaviour.",
+        "address": 362,
+        "debug": "Wallet.sol:362 - return _walletLibrary.delegatecall(msg.data)"
+      }
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "contract": "ReturnValue",
+  "tool": "mythril",
+  "start": 1698796800,
+  "end": 1698796810,
+  "duration": 10,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "source.sol",
+        "function": "callnotchecked(address)",
+        "lineno": 9,
+        "code": "callee.call();",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The contract doesn't check the return value of the low-level call. If the call fails, the execution doesn't revert, potentially leading to unexpected behavior. A caller may use a fallback function that does not have enough gas, causing the call to fail. The transaction would not revert, and the caller may mistakenly believe that the transaction was successful, creating unexpected results.",
+        "address": 9,
+        "debug": "callee.call() does not check the return value. Failure of the call will not revert the transaction."
+      }
+    ]
+  }
+}

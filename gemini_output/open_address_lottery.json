@@ -1,0 +1,90 @@
+{
+  "contract": "OpenAddressLottery.sol",
+  "tool": "mythril",
+  "start": 1702300962,
+  "end": 1702300963,
+  "duration": 1,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "OpenAddressLottery.sol",
+        "function": "OpenAddressLottery()",
+        "lineno": 32,
+        "code": "reseed(SeedComponents((uint)(block.coinbase), block.difficulty, block.gaslimit, block.timestamp)); //generate a quality random seed",
+        "title": "Dependence on predictable environment variable",
+        "type": "Warning",
+        "description": "The contract uses block.timestamp, block.coinbase, block.difficulty and block.gaslimit to generate a seed. These values are easily predictable by a malicious miner and can be exploited to manipulate the contract's behavior.",
+        "address": 32,
+        "debug": "The constructor uses block.coinbase, block.difficulty, block.gaslimit and block.timestamp which are easily predictable by miners. This can lead to predictable lottery results."
+      },
+      {
+        "filename": "OpenAddressLottery.sol",
+        "function": "participate()",
+        "lineno": 46,
+        "code": "msg.sender.transfer(win);",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The contract transfers ETH to the user after determining they are a winner. This is vulnerable to reentrancy attacks. A malicious contract could re-enter the participate() function upon receiving the ETH, potentially allowing them to claim multiple jackpots.",
+        "address": 46,
+        "debug": "The contract calls msg.sender.transfer(win) and then proceeds without updating internal state, leading to a reentrancy vulnerability.  A malicious contract can call participate() again during the transfer."
+      },
+      {
+        "filename": "OpenAddressLottery.sol",
+        "function": "participate()",
+        "lineno": 46,
+        "code": "msg.sender.transfer(win);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The contract does not check the return value of the transfer() call. If the transfer fails, the contract will continue to execute as if the transfer was successful, potentially leading to unexpected behavior and loss of funds.",
+        "address": 46,
+        "debug": "The transfer function call does not check the boolean return value.  If the transfer fails (due to out of gas, or other reasons), the execution continues without error handling, potentially leaving the contract in an inconsistent state."
+      },
+      {
+        "filename": "OpenAddressLottery.sol",
+        "function": "participate()",
+        "lineno": 50,
+        "code": "reseed(SeedComponents((uint)(block.coinbase), block.difficulty, block.gaslimit, block.timestamp)); //generate a quality random seed",
+        "title": "Dependence on predictable environment variable",
+        "type": "Warning",
+        "description": "The contract uses block.timestamp, block.coinbase, block.difficulty and block.gaslimit to generate a seed. These values are easily predictable by a malicious miner and can be exploited to manipulate the contract's behavior.",
+        "address": 50,
+        "debug": "Reseeding uses block.coinbase, block.difficulty, block.gaslimit and block.timestamp which are easily predictable by miners. This can lead to predictable lottery results."
+      },
+      {
+        "filename": "OpenAddressLottery.sol",
+        "function": "forceReseed()",
+        "lineno": 71,
+        "code": "s.component2 = uint256(block.blockhash(block.number - 1));",
+        "title": "Dependence on predictable environment variable",
+        "type": "Warning",
+        "description": "The contract uses block.blockhash(block.number - 1) to generate a seed.  While not directly predictable, this value can be influenced to some extent by a malicious miner.",
+        "address": 71,
+        "debug": "block.blockhash(block.number - 1) can be influenced by miners and should not be used as a source of randomness."
+      },
+      {
+        "filename": "OpenAddressLottery.sol",
+        "function": "forceReseed()",
+        "lineno": 72,
+        "code": "s.component3 = block.difficulty*(uint)(block.coinbase);",
+        "title": "Dependence on predictable environment variable",
+        "type": "Warning",
+        "description": "The contract uses block.coinbase and block.difficulty to generate a seed. These values are easily predictable by a malicious miner and can be exploited to manipulate the contract's behavior.",
+        "address": 72,
+        "debug": "The contract uses block.coinbase and block.difficulty in forceReseed(), allowing the owner to reseed based on predictable block values."
+      },
+      {
+        "filename": "OpenAddressLottery.sol",
+        "function": "forceReseed()",
+        "lineno": 73,
+        "code": "s.component4 = tx.gasprice * 7;",
+        "title": "Dependence on predictable environment variable",
+        "type": "Warning",
+        "description": "The contract uses tx.gasprice to generate a seed.  While not directly controllable, this value can be gamed to some extent. If a user monitors the mempool and sees the owner about to reseed, the user can slightly adjust their tx.gasprice in their participate() call to influence the seed a tiny bit.",
+        "address": 73,
+        "debug": "tx.gasprice used to create a seed. This gives the submitter (owner) slight control over the random number."
+      }
+    ]
+  }
+}

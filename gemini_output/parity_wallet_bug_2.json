@@ -1,0 +1,57 @@
+{
+  "contract": "WalletLibrary.sol",
+  "tool": "mythril",
+  "start": 1702224116,
+  "end": 1702224117,
+  "duration": 1,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "WalletLibrary.sol",
+        "function": "execute(address,uint256,bytes)",
+        "lineno": 281,
+        "code": "      if (!_to.call.value(_value)(_data))",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The call to `_to.call.value(_value)(_data)` at line 281 does not check the return value. If the call fails, the transaction will not revert, potentially leading to unexpected behavior and loss of funds.",
+        "address": 281,
+        "debug": "The return value of the call function is not checked. This can lead to unexpected behavior if the call fails. The program flow continues even if the external call fails. Recommended mitigation: Check the return value of the call function."
+      },
+      {
+        "filename": "WalletLibrary.sol",
+        "function": "confirm(bytes32)",
+        "lineno": 301,
+        "code": "        if (!m_txs[_h].to.call.value(m_txs[_h].value)(m_txs[_h].data))",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The call to `m_txs[_h].to.call.value(m_txs[_h].value)(m_txs[_h].data)` at line 301 does not check the return value. If the call fails, the transaction will not revert, potentially leading to unexpected behavior and loss of funds.",
+        "address": 301,
+        "debug": "The return value of the call function is not checked. This can lead to unexpected behavior if the call fails. The program flow continues even if the external call fails. Recommended mitigation: Check the return value of the call function."
+      },
+      {
+        "filename": "WalletLibrary.sol",
+        "function": "underLimit(uint256)",
+        "lineno": 368,
+        "code": "    if (m_spentToday + _value >= m_spentToday && m_spentToday + _value <= m_dailyLimit) {",
+        "title": "Integer Overflow",
+        "type": "Warning",
+        "description": "The addition `m_spentToday + _value` at line 368 is performed without overflow checks. If the result exceeds the maximum value of a uint256, it will wrap around, leading to incorrect calculations and potentially bypassing the daily limit.",
+        "address": 368,
+        "debug": "The addition `m_spentToday + _value` is susceptible to integer overflow. The condition `m_spentToday + _value >= m_spentToday` will always evaluate to true because of the wrap around, effectively bypassing the check. Recommended mitigation: Use SafeMath library."
+      },
+      {
+        "filename": "WalletLibrary.sol",
+        "function": "today()",
+        "lineno": 379,
+        "code": "  function today() private constant returns (uint) { return now / 1 days; }",
+        "title": "Dependence on predictable environment variable",
+        "type": "Warning",
+        "description": "The function `today()` relies on `now` (block.timestamp) for determining the current day. `block.timestamp` is miner-manipulatable, allowing miners to influence the value of `today()` within certain bounds. This can be exploited to bypass daily limits or manipulate other time-dependent functionalities.",
+        "address": 379,
+        "debug": "The value of `now` is dependent on the miner. Using `now` to calculate the current day makes the `today()` function vulnerable to manipulation by miners. Recommended mitigation: Do not rely on `block.timestamp` for critical security decisions."
+      }
+    ]
+  }
+}

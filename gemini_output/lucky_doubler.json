@@ -1,0 +1,101 @@
+{
+  "contract": "LuckyDoubler.sol",
+  "tool": "mythril",
+  "start": 1705447878,
+  "end": 1705447879,
+  "duration": 0.75,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "LuckyDoubler.sol",
+        "function": "init()",
+        "lineno": 54,
+        "code": "msg.sender.send(msg.value);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The call to msg.sender.send(msg.value) at LuckyDoubler.sol#54 does not check the return value of the send() function. If the transfer fails, the ether will be lost. This can happen if the recipient is a contract that rejects the ether, or if the recipient is an address with no code and the contract runs out of gas during the transfer. This can lead to a denial of service or loss of funds.",
+        "address": 54,
+        "debug": "The return value of send() is not checked, leading to potential loss of funds if the transfer fails."
+      },
+      {
+        "filename": "LuckyDoubler.sol",
+        "function": "join()",
+        "lineno": 68,
+        "code": "msg.sender.send(msg.value - 1 ether);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The call to msg.sender.send(msg.value - 1 ether) at LuckyDoubler.sol#68 does not check the return value of the send() function. If the transfer fails, the ether will be lost. This can happen if the recipient is a contract that rejects the ether, or if the recipient is an address with no code and the contract runs out of gas during the transfer. This can lead to a denial of service or loss of funds.",
+        "address": 68,
+        "debug": "The return value of send() is not checked, leading to potential loss of funds if the transfer fails."
+      },
+      {
+        "filename": "LuckyDoubler.sol",
+        "function": "join()",
+        "lineno": 99,
+        "code": "theEntry.entryAddress.send(payout);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The call to theEntry.entryAddress.send(payout) at LuckyDoubler.sol#99 does not check the return value of the send() function. If the transfer fails, the ether will be lost. This can happen if the recipient is a contract that rejects the ether, or if the recipient is an address with no code and the contract runs out of gas during the transfer. This can lead to a denial of service or loss of funds.",
+        "address": 99,
+        "debug": "The return value of send() is not checked, leading to potential loss of funds if the transfer fails."
+      },
+      {
+        "filename": "LuckyDoubler.sol",
+        "function": "join()",
+        "lineno": 114,
+        "code": "owner.send(fees);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The call to owner.send(fees) at LuckyDoubler.sol#114 does not check the return value of the send() function. If the transfer fails, the ether will be lost. This can happen if the recipient is a contract that rejects the ether, or if the recipient is a contract that rejects the ether, or if the recipient is an address with no code and the contract runs out of gas during the transfer. This can lead to a denial of service or loss of funds. Furthermore, the owner can block the contract by making the send function fail.",
+        "address": 114,
+        "debug": "The return value of send() is not checked, leading to potential loss of funds if the transfer fails."
+      },
+      {
+        "filename": "LuckyDoubler.sol",
+        "function": "join()",
+        "lineno": 100,
+        "code": "theEntry.paid = true;",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The state variable 'theEntry.paid' is updated after an external call to 'theEntry.entryAddress.send(payout)' at LuckyDoubler.sol#99. This introduces a reentrancy vulnerability. A malicious contract receiving the payout can call back into the join() function before the 'paid' flag is set to true, potentially allowing them to withdraw multiple times.",
+        "address": 100,
+        "debug": "State change occurs after external call, potential reentrancy vulnerability."
+      },
+      {
+        "filename": "LuckyDoubler.sol",
+        "function": "join()",
+        "lineno": 101,
+        "code": "users[theEntry.entryAddress].payoutsReceived++;",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The state variable 'users[theEntry.entryAddress].payoutsReceived' is updated after an external call to 'theEntry.entryAddress.send(payout)' at LuckyDoubler.sol#99. This introduces a reentrancy vulnerability. A malicious contract receiving the payout can call back into the join() function before the 'payoutsReceived' counter is updated, potentially allowing them to exploit the logic related to payouts.",
+        "address": 101,
+        "debug": "State change occurs after external call, potential reentrancy vulnerability."
+      },
+      {
+        "filename": "LuckyDoubler.sol",
+        "function": "join()",
+        "lineno": 105,
+        "code": "unpaidEntries[index] = unpaidEntries[unpaidEntries.length - 1];",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The state variable 'unpaidEntries' is updated after an external call to 'theEntry.entryAddress.send(payout)' at LuckyDoubler.sol#99. This introduces a reentrancy vulnerability. A malicious contract receiving the payout can call back into the join() function before the unpaidEntries array is updated, potentially manipulating the payout logic.",
+        "address": 105,
+        "debug": "State change occurs after external call, potential reentrancy vulnerability."
+      },
+      {
+        "filename": "LuckyDoubler.sol",
+        "function": "rand(uint256)",
+        "lineno": 127,
+        "code": "uint256 hashVal = uint256(block.blockhash(lastBlockNumber));",
+        "title": "Dependence on predictable environment variable",
+        "type": "Warning",
+        "description": "The random number generator uses block.blockhash(lastBlockNumber) at LuckyDoubler.sol#127, which is known to be predictable. Miners can influence the outcome of blockhash, or collude to create a predictable sequence. This allows malicious actors to manipulate the randomness and game the system, potentially leading to unfair payouts or loss of funds for other users.",
+        "address": 127,
+        "debug": "Randomness relies on block.blockhash, which is miner-manipulatable."
+      }
+    ]
+  }
+}

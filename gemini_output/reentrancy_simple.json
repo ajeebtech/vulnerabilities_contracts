@@ -1,0 +1,35 @@
+{
+  "contract": "Reentrance.sol",
+  "tool": "mythril",
+  "start": 1698787200,
+  "end": 1698787210,
+  "duration": 10,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "Reentrance.sol",
+        "function": "withdrawBalance()",
+        "lineno": 16,
+        "code": "if( ! (msg.sender.call.value(userBalance[msg.sender])() ) ){",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The contract sends ether to the caller without first setting its balance to 0. This allows for a reentrancy attack if the receiver is a contract that calls back into the withdrawBalance() function.",
+        "address": 16,
+        "debug": "The withdrawBalance function at line 16 sends ether to the caller using a low-level call without checking the return value. This allows a malicious contract to recursively call the withdrawBalance function before the userBalance[msg.sender] is set to zero, potentially draining the contract's funds."
+      },
+      {
+        "filename": "Reentrance.sol",
+        "function": "withdrawBalance()",
+        "lineno": 16,
+        "code": "if( ! (msg.sender.call.value(userBalance[msg.sender])() ) ){",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The return value of the call function is not checked. If the call fails, the transaction will not revert, potentially leading to unexpected state changes.",
+        "address": 16,
+        "debug": "The withdrawBalance function uses a low-level call at line 16 without checking the return value. A failed call (e.g., due to insufficient gas or a revert in the recipient contract) will not revert the transaction, leaving the contract in an inconsistent state."
+      }
+    ]
+  }
+}

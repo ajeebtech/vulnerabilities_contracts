@@ -1,0 +1,24 @@
+{
+  "contract": "Missing.sol",
+  "tool": "mythril",
+  "start": 1698787200,
+  "end": 1698787210,
+  "duration": 10,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "Missing.sol",
+        "function": "withdraw()",
+        "lineno": 22,
+        "code": "owner.transfer(this.balance);",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The function `withdraw()` at Missing.sol#22 executes a transfer to the contract owner after checking that the sender is the owner. However, if the transfer fails, the execution will not revert and the contract's state will be inconsistent, as the balance will be reduced without the intended recipient receiving the funds. This could lead to a denial of service or unexpected behavior if the owner is a contract that does not accept Ether or if the transfer consumes more gas than the available stipend.  The transfer() function does not handle errors, leading to unexpected states.",
+        "address": 22,
+        "debug": "The transfer to the owner address might fail, leading to unexpected contract state because errors are not correctly handled."
+      }
+    ]
+  }
+}

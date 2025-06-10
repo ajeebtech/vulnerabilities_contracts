@@ -1,0 +1,36 @@
+{
+  "contract": "ModifierEntrancy.sol",
+  "tool": "mythril",
+  "start": 1698796834,
+  "end": 1698796834,
+  "duration": 0,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "ModifierEntrancy.sol",
+        "function": "supportsToken()",
+        "lineno": 13,
+        "code": "require(keccak256(abi.encodePacked(\"Nu Token\")) == Bank(msg.sender).supportsToken());",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The contract calls an external function `Bank(msg.sender).supportsToken()` within a modifier, and the state is changed after this external call. This is vulnerable to reentrancy because the external contract can call back into the `airDrop` function through the fallback function, potentially bypassing the intended logic of the modifier and potentially leading to unexpected state changes. The vulnerable line is: `require(keccak256(abi.encodePacked(\"Nu Token\")) == Bank(msg.sender).supportsToken());`.",
+        "address": 13,
+        "debug": "External call to Bank(msg.sender).supportsToken() in the modifier followed by state changes, making the contract vulnerable to reentrancy."
+      },
+      {
+        "filename": "ModifierEntrancy.sol",
+        "function": "airDrop()",
+        "lineno": 9,
+        "code": "tokenBalance[msg.sender] += 20;",
+        "title": "Integer Overflow",
+        "type": "Warning",
+        "description": "The contract adds 20 to `tokenBalance[msg.sender]` without checking for integer overflows. If `tokenBalance[msg.sender]` is sufficiently large, adding 20 to it will cause an overflow, wrapping around to a small value. This could be exploited to obtain more tokens than intended or to bypass balance checks. The vulnerable line is: `tokenBalance[msg.sender] += 20;`.",
+        "address": 9,
+        "debug": "Addition to tokenBalance without overflow check."
+      }
+    ],
+    "errors": []
+  }
+}

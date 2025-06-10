@@ -1,0 +1,90 @@
+{
+  "contract": "OddsAndEvens.sol",
+  "tool": "mythril",
+  "start": 1698796876,
+  "end": 1698796880,
+  "duration": 4,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "OddsAndEvens.sol",
+        "function": "play(uint256)",
+        "lineno": 21,
+        "code": "if (msg.value != 1 ether) throw;",
+        "title": "Transaction order dependence",
+        "type": "Informational",
+        "description": "The contract checks the value of ether sent with the transaction, but does not check the block number or timestamp. This can lead to transaction-ordering dependence vulnerabilities. A miner could manipulate the timestamp or block number to influence the outcome of a state change.",
+        "address": 21,
+        "debug": "Miner can influence the outcome of state change."
+      },
+      {
+        "filename": "OddsAndEvens.sol",
+        "function": "andTheWinnerIs()",
+        "lineno": 33,
+        "code": "res = players[0].addr.send(1800 finney);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The call to players[0].addr.send(1800 finney) returns a boolean value indicating success or failure, but this return value is not checked. If the send fails, the contract will continue execution as if the transfer was successful, potentially leading to unexpected behavior and loss of funds. The same applies to line 36.",
+        "address": 33,
+        "debug": "Unchecked return value from send() operation."
+      },
+      {
+        "filename": "OddsAndEvens.sol",
+        "function": "andTheWinnerIs()",
+        "lineno": 33,
+        "code": "res = players[0].addr.send(1800 finney);",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The function andTheWinnerIs() makes an external call to players[0].addr.send(1800 finney) and does not check the return value. If the call fails, the state of the contract will be inconsistent. This is a reentrancy vulnerability. The player can call this function again before `andTheWinnerIs` finishes executing. The same applies to line 36.",
+        "address": 33,
+        "debug": "External call to send ether followed by state change without checking the result."
+      },
+      {
+        "filename": "OddsAndEvens.sol",
+        "function": "andTheWinnerIs()",
+        "lineno": 36,
+        "code": "res = players[1].addr.send(1800 finney);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The call to players[1].addr.send(1800 finney) returns a boolean value indicating success or failure, but this return value is not checked. If the send fails, the contract will continue execution as if the transfer was successful, potentially leading to unexpected behavior and loss of funds.",
+        "address": 36,
+        "debug": "Unchecked return value from send() operation."
+      },
+      {
+        "filename": "OddsAndEvens.sol",
+        "function": "andTheWinnerIs()",
+        "lineno": 36,
+        "code": "res = players[1].addr.send(1800 finney);",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The function andTheWinnerIs() makes an external call to players[1].addr.send(1800 finney) and does not check the return value. If the call fails, the state of the contract will be inconsistent. This is a reentrancy vulnerability. The player can call this function again before `andTheWinnerIs` finishes executing.",
+        "address": 36,
+        "debug": "External call to send ether followed by state change without checking the result."
+      },
+      {
+        "filename": "OddsAndEvens.sol",
+        "function": "getProfit()",
+        "lineno": 42,
+        "code": "bool res = msg.sender.send(this.balance);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The call to msg.sender.send(this.balance) returns a boolean value indicating success or failure, but this return value is not checked. If the send fails, the contract will continue execution as if the transfer was successful, potentially leading to unexpected behavior and loss of funds.",
+        "address": 42,
+        "debug": "Unchecked return value from send() operation."
+      },
+      {
+        "filename": "OddsAndEvens.sol",
+        "function": "getProfit()",
+        "lineno": 42,
+        "code": "bool res = msg.sender.send(this.balance);",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The function getProfit() makes an external call to msg.sender.send(this.balance) and does not check the return value. If the call fails, the state of the contract will be inconsistent. This could lead to a denial of service where the owner cannot withdraw the contract's balance.",
+        "address": 42,
+        "debug": "External call to send ether followed by state change without checking the result."
+      }
+    ]
+  }
+}

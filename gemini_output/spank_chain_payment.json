@@ -1,0 +1,68 @@
+{
+  "contract": "LedgerChannel.sol",
+  "tool": "mythril",
+  "start": 1704802884,
+  "end": 1704802943,
+  "duration": 59,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "LedgerChannel.sol",
+        "function": "LCOpenTimeout(bytes32)",
+        "lineno": 253,
+        "code": "Channels[_lcID].partyAddresses[0].transfer(Channels[_lcID].ethBalances[0]);",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The function `LCOpenTimeout(bytes32)` at LedgerChannel.sol#248 performs a transfer to an arbitrary user. It then potentially deletes the channel state at LedgerChannel.sol#253 after the external call, leading to a reentrancy vulnerability. An attacker could re-enter the function via the `transfer` function and potentially drain all funds of the contract. The `LCOpenTimeout` function is callable by `Channels[_lcID].partyAddresses[0]` when `now > Channels[_lcID].LCopenTimeout` and  `Channels[_lcID].isOpen == false`",
+        "address": 253,
+        "debug": "Call to Channels[_lcID].partyAddresses[0].transfer can cause reentrancy"
+      },
+      {
+        "filename": "LedgerChannel.sol",
+        "function": "consensusCloseChannel(bytes32,uint256,uint256[4],string,string)",
+        "lineno": 327,
+        "code": "Channels[_lcID].partyAddresses[0].transfer(_balances[0]);",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The function `consensusCloseChannel(bytes32,uint256,uint256[4],string,string)` at LedgerChannel.sol#307 performs a transfer to an arbitrary user. It then potentially decreases the number of open channels and sets `Channels[_lcID].isOpen = false` at LedgerChannel.sol#327 after the external call, leading to a reentrancy vulnerability. An attacker could re-enter the function via the `transfer` function and potentially drain all funds of the contract. This is triggered when both signatures match. The function is callable by anyone.",
+        "address": 327,
+        "debug": "Call to Channels[_lcID].partyAddresses[0].transfer can cause reentrancy"
+      },
+      {
+        "filename": "LedgerChannel.sol",
+        "function": "byzantineCloseChannel(bytes32)",
+        "lineno": 480,
+        "code": "channel.partyAddresses[0].transfer(ethbalanceA);",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The function `byzantineCloseChannel(bytes32)` at LedgerChannel.sol#454 performs a transfer to an arbitrary user at LedgerChannel.sol#480. It then sets `channel.isOpen = false;` and decrements `numChannels` at LedgerChannel.sol#496 after the external call, leading to a reentrancy vulnerability. An attacker could re-enter the function via the `transfer` function and potentially drain all funds of the contract. The `byzantineCloseChannel` function is callable when `channel.isOpen, channel.isUpdateLCSettling == true, channel.numOpenVC == 0, and channel.updateLCtimeout < now`.",
+        "address": 480,
+        "debug": "Call to channel.partyAddresses[0].transfer can cause reentrancy"
+      },
+      {
+        "filename": "LedgerChannel.sol",
+        "function": "consensusCloseChannel(bytes32,uint256,uint256[4],string,string)",
+        "lineno": 328,
+        "code": "Channels[_lcID].partyAddresses[1].transfer(_balances[1]);",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The function `consensusCloseChannel(bytes32,uint256,uint256[4],string,string)` at LedgerChannel.sol#307 performs a transfer to an arbitrary user. It then potentially decreases the number of open channels and sets `Channels[_lcID].isOpen = false` at LedgerChannel.sol#328 after the external call, leading to a reentrancy vulnerability. An attacker could re-enter the function via the `transfer` function and potentially drain all funds of the contract. This is triggered when both signatures match. The function is callable by anyone.",
+        "address": 328,
+        "debug": "Call to Channels[_lcID].partyAddresses[1].transfer can cause reentrancy"
+      },
+      {
+        "filename": "LedgerChannel.sol",
+        "function": "byzantineCloseChannel(bytes32)",
+        "lineno": 481,
+        "code": "channel.partyAddresses[1].transfer(ethbalanceI);",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The function `byzantineCloseChannel(bytes32)` at LedgerChannel.sol#454 performs a transfer to an arbitrary user at LedgerChannel.sol#481. It then sets `channel.isOpen = false;` and decrements `numChannels` at LedgerChannel.sol#496 after the external call, leading to a reentrancy vulnerability. An attacker could re-enter the function via the `transfer` function and potentially drain all funds of the contract. The `byzantineCloseChannel` function is callable when `channel.isOpen, channel.isUpdateLCSettling == true, channel.numOpenVC == 0, and channel.updateLCtimeout < now`.",
+        "address": 481,
+        "debug": "Call to channel.partyAddresses[1].transfer can cause reentrancy"
+      }
+    ]
+  }
+}

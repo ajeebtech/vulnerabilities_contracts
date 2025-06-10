@@ -1,0 +1,68 @@
+{
+  "contract": "Lotto.sol",
+  "tool": "mythril",
+  "start": 1702226376,
+  "end": 1702226378,
+  "duration": 2,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "Lotto.sol",
+        "function": "cash(uint256,uint256)",
+        "lineno": 92,
+        "code": "winner.send(subpot);",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The contract accounts state change after an external call. It is possible that the called contract re-enters the function before the state change takes place. This can lead to undesired behavior and potentially loss of funds.",
+        "address": 92,
+        "debug": "The cash() function sends ether to the winner before setting rounds[roundIndex].isCashed[subpotIndex] to true. If the winner is a contract with a payable fallback function, it can call back into cash() and potentially cash out the same subpot multiple times before isCashed is updated."
+      },
+      {
+        "filename": "Lotto.sol",
+        "function": "()(uint256)",
+        "lineno": 132,
+        "code": "msg.sender.send(msg.value-value);",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The contract accounts state change after an external call. It is possible that the called contract re-enters the function before the state change takes place. This can lead to undesired behavior and potentially loss of funds.",
+        "address": 132,
+        "debug": "The fallback function sends a refund to msg.sender before updating the contract's internal state related to tickets. If msg.sender is a contract, it can re-enter the fallback function and potentially manipulate the ticket buying process or cause unexpected state changes."
+      },
+      {
+        "filename": "Lotto.sol",
+        "function": "calculateWinner(uint256,uint256)",
+        "lineno": 51,
+        "code": "var decisionBlockHash = getHashOfBlock(decisionBlockNumber);",
+        "title": "Dependence on predictable environment variable",
+        "type": "Warning",
+        "description": "The contract uses block.blockhash to determine the winner, which is a predictable source of randomness. This can allow miners or other actors to manipulate the outcome of the lottery.",
+        "address": 51,
+        "debug": "The calculateWinner function relies on block.blockhash(decisionBlockNumber) to generate a random number for selecting the winning ticket. Blockhashes are not truly random and can be influenced by miners. An attacker (specifically a miner) could potentially manipulate the blockhash of decisionBlockNumber to increase their chances of winning or to force a specific winner."
+      },
+      {
+        "filename": "Lotto.sol",
+        "function": "cash(uint256,uint256)",
+        "lineno": 83,
+        "code": "var winner = calculateWinner(roundIndex,subpotIndex);",
+        "title": "Dependence on predictable environment variable",
+        "type": "Warning",
+        "description": "The contract uses block.blockhash to determine the winner, which is a predictable source of randomness. This can allow miners or other actors to manipulate the outcome of the lottery.",
+        "address": 83,
+        "debug": "The cash() function relies on the potentially predictable output of calculateWinner(), which in turn relies on block.blockhash(decisionBlockNumber) to select the winner. Since the winner is selected based on block.blockhash(), the outcome can be influenced by miners."
+      },
+      {
+        "filename": "Lotto.sol",
+        "function": "getHashOfBlock(uint256)",
+        "lineno": 98,
+        "code": "return uint(block.blockhash(blockIndex));",
+        "title": "Dependence on predictable environment variable",
+        "type": "Warning",
+        "description": "The contract uses block.blockhash to determine the winner, which is a predictable source of randomness. This can allow miners or other actors to manipulate the outcome of the lottery.",
+        "address": 98,
+        "debug": "The function getHashOfBlock() directly returns the blockhash of a given block index. block.blockhash is not a secure source of randomness, as miners can manipulate it to some extent. This predictable randomness makes the contract vulnerable to manipulation by miners."
+      }
+    ]
+  }
+}

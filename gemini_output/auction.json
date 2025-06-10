@@ -1,0 +1,24 @@
+{
+  "contract": "DosAuction.sol",
+  "tool": "mythril",
+  "start": 1698777600,
+  "end": 1698777610,
+  "duration": 10,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "DosAuction.sol",
+        "function": "bid()",
+        "lineno": 15,
+        "code": "require(currentFrontrunner.send(currentBid));",
+        "title": "Denial of Service",
+        "type": "Warning",
+        "description": "The contract is vulnerable to a Denial of Service (DoS) attack. If the currentFrontrunner's address is set to a contract whose fallback function always reverts, no one will be able to bid higher than the currentBid. This is because the `send` function will always fail, and the entire `bid` transaction will revert due to the `require` statement. An attacker can take advantage of this by becoming the currentFrontrunner with a small bid, and then making their fallback function revert, effectively preventing anyone else from bidding. This can lead to a complete halt of the auction process.",
+        "address": 15,
+        "debug": "The `require(currentFrontrunner.send(currentBid))` line will cause the transaction to revert if the `send` call fails, for instance, if the `currentFrontrunner` is a contract that always reverts in its fallback function. This will prevent anyone from outbidding the current frontrunner, leading to a denial of service."
+      }
+    ]
+  }
+}

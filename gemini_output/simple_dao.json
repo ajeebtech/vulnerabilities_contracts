@@ -1,0 +1,35 @@
+{
+  "contract": "SimpleDAO.sol",
+  "tool": "mythril",
+  "start": 1701980969,
+  "end": 1701980970,
+  "duration": 1,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "SimpleDAO.sol",
+        "function": "withdraw(uint256)",
+        "lineno": 12,
+        "code": "bool res = msg.sender.call.value(amount)();",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The return value of a low-level call is not checked. Consequently, the execution flow does not change if the call fails. Attention should be paid to the return value of low-level calls, as it indicates whether the call was successful.\n\nImpact: Failing to check the return value of an external call can lead to unexpected behavior and potential security vulnerabilities, such as incorrect state updates and denial-of-service conditions.",
+        "address": 12,
+        "debug": "The return value of the call to msg.sender is not checked. The execution flow continues regardless of whether the call succeeds or fails."
+      },
+      {
+        "filename": "SimpleDAO.sol",
+        "function": "withdraw(uint256)",
+        "lineno": 13,
+        "code": "credit[msg.sender]-=amount;",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The contract account state is updated after an external call. Consider that the called contract could re-enter the function before this state update takes place. This can lead to reentrancy vulnerabilities.\n\nImpact: An attacker can exploit the reentrancy vulnerability to withdraw more funds than they are entitled to. This can result in a loss of funds for the contract.",
+        "address": 13,
+        "debug": "State change (credit[msg.sender]-=amount;) happens after an external call (msg.sender.call.value(amount)())."
+      }
+    ]
+  }
+}

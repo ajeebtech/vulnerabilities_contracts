@@ -1,0 +1,167 @@
+{
+  "contract": "BlackJack.sol",
+  "tool": "mythril",
+  "start": 1702226095,
+  "end": 1702226100,
+  "duration": 5,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "BlackJack.sol",
+        "function": "deal()",
+        "lineno": 92,
+        "code": "playerCards[0] = Deck.deal(msg.sender, 0);",
+        "title": "Dependence on predictable environment variable",
+        "type": "Warning",
+        "description": "The contract relies on block.blockhash to generate randomness. This can be manipulated by miners to a certain degree.",
+        "address": 92,
+        "debug": "The function `deal()` uses block.blockhash in the `Deck.deal()` function call, which is used to generate random numbers. Blockhash is influenced by miners, which can be predictable to some extent, and hence introduce bias during random numbers generation."
+      },
+      {
+        "filename": "BlackJack.sol",
+        "function": "deal()",
+        "lineno": 94,
+        "code": "houseCards[0] = Deck.deal(msg.sender, 1);",
+        "title": "Dependence on predictable environment variable",
+        "type": "Warning",
+        "description": "The contract relies on block.blockhash to generate randomness. This can be manipulated by miners to a certain degree.",
+        "address": 94,
+        "debug": "The function `deal()` uses block.blockhash in the `Deck.deal()` function call, which is used to generate random numbers. Blockhash is influenced by miners, which can be predictable to some extent, and hence introduce bias during random numbers generation."
+      },
+      {
+        "filename": "BlackJack.sol",
+        "function": "deal()",
+        "lineno": 96,
+        "code": "playerCards[1] = Deck.deal(msg.sender, 2);",
+        "title": "Dependence on predictable environment variable",
+        "type": "Warning",
+        "description": "The contract relies on block.blockhash to generate randomness. This can be manipulated by miners to a certain degree.",
+        "address": 96,
+        "debug": "The function `deal()` uses block.blockhash in the `Deck.deal()` function call, which is used to generate random numbers. Blockhash is influenced by miners, which can be predictable to some extent, and hence introduce bias during random numbers generation."
+      },
+      {
+        "filename": "BlackJack.sol",
+        "function": "hit()",
+        "lineno": 109,
+        "code": "games[msg.sender].playerCards.push(Deck.deal(msg.sender, nextCard));",
+        "title": "Dependence on predictable environment variable",
+        "type": "Warning",
+        "description": "The contract relies on block.blockhash to generate randomness. This can be manipulated by miners to a certain degree.",
+        "address": 109,
+        "debug": "The function `hit()` uses block.blockhash in the `Deck.deal()` function call, which is used to generate random numbers. Blockhash is influenced by miners, which can be predictable to some extent, and hence introduce bias during random numbers generation."
+      },
+      {
+        "filename": "BlackJack.sol",
+        "function": "stand()",
+        "lineno": 121,
+        "code": "uint8 newCard = Deck.deal(msg.sender, nextCard);",
+        "title": "Dependence on predictable environment variable",
+        "type": "Warning",
+        "description": "The contract relies on block.blockhash to generate randomness. This can be manipulated by miners to a certain degree.",
+        "address": 121,
+        "debug": "The function `stand()` uses block.blockhash in the `Deck.deal()` function call, which is used to generate random numbers. Blockhash is influenced by miners, which can be predictable to some extent, and hence introduce bias during random numbers generation."
+      },
+      {
+        "filename": "BlackJack.sol",
+        "function": "checkGameResult(Game,bool)",
+        "lineno": 144,
+        "code": "if (!msg.sender.send(game.bet)) throw; // return bet to the player",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The return value of a call to msg.sender.send is not checked. If the call fails, the transaction will not revert. This can lead to unexpected behavior and potential loss of funds.",
+        "address": 144,
+        "debug": "The `send` function might fail, potentially leaving the contract in an inconsistent state."
+      },
+      {
+        "filename": "BlackJack.sol",
+        "function": "checkGameResult(Game,bool)",
+        "lineno": 155,
+        "code": "if (!msg.sender.send((game.bet * 5) / 2)) throw; // send prize to the player",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The return value of a call to msg.sender.send is not checked. If the call fails, the transaction will not revert. This can lead to unexpected behavior and potential loss of funds.",
+        "address": 155,
+        "debug": "The `send` function might fail, potentially leaving the contract in an inconsistent state."
+      },
+      {
+        "filename": "BlackJack.sol",
+        "function": "checkGameResult(Game,bool)",
+        "lineno": 159,
+        "code": "if (!msg.sender.send(game.bet * 2)) throw; // send prize to the player",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The return value of a call to msg.sender.send is not checked. If the call fails, the transaction will not revert. This can lead to unexpected behavior and potential loss of funds.",
+        "address": 159,
+        "debug": "The `send` function might fail, potentially leaving the contract in an inconsistent state."
+      },
+      {
+        "filename": "BlackJack.sol",
+        "function": "checkGameResult(Game,bool)",
+        "lineno": 205,
+        "code": "if (!msg.sender.send(game.bet * 2)) throw; // send prize to the player",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The return value of a call to msg.sender.send is not checked. If the call fails, the transaction will not revert. This can lead to unexpected behavior and potential loss of funds.",
+        "address": 205,
+        "debug": "The `send` function might fail, potentially leaving the contract in an inconsistent state."
+      },
+      {
+        "filename": "BlackJack.sol",
+        "function": "checkGameResult(Game,bool)",
+        "lineno": 214,
+        "code": "if (!msg.sender.send(game.bet)) throw; // return bet to the player",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The return value of a call to msg.sender.send is not checked. If the call fails, the transaction will not revert. This can lead to unexpected behavior and potential loss of funds.",
+        "address": 214,
+        "debug": "The `send` function might fail, potentially leaving the contract in an inconsistent state."
+      },
+      {
+        "filename": "BlackJack.sol",
+        "function": "checkGameResult(Game,bool)",
+        "lineno": 218,
+        "code": "if (!msg.sender.send(game.bet * 2)) throw; // send prize to the player",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The return value of a call to msg.sender.send is not checked. If the call fails, the transaction will not revert. This can lead to unexpected behavior and potential loss of funds.",
+        "address": 218,
+        "debug": "The `send` function might fail, potentially leaving the contract in an inconsistent state."
+      },
+      {
+        "filename": "BlackJack.sol",
+        "function": "deal()",
+        "lineno": 97,
+        "code": "\t\t\tstate: GameState.Ongoing,",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "State change after external call in function `deal()` can cause reentrancy.",
+        "address": 97,
+        "debug": "The function deal() makes an external call to Deck.deal() before setting the game state to Ongoing. An attacker can potentially re-enter the function before the state change, leading to unexpected behavior and potential loss of funds."
+      },
+      {
+        "filename": "BlackJack.sol",
+        "function": "hit()",
+        "lineno": 110,
+        "code": "\t\tDeal(true, games[msg.sender].playerCards[games[msg.sender].playerCards.length - 1]);",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "State change after external call in function `hit()` can cause reentrancy.",
+        "address": 110,
+        "debug": "The function hit() calls the Deal event emission after pushing a card to the player's cards array using Deck.deal(). An attacker can potentially re-enter the function after the card is added but before the Deal event is emitted, leading to unexpected behavior and potential loss of funds."
+      },
+      {
+        "filename": "BlackJack.sol",
+        "function": "stand()",
+        "lineno": 123,
+        "code": "\t\t\tDeal(false, newCard);",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "State change after external call in function `stand()` can cause reentrancy.",
+        "address": 123,
+        "debug": "The function stand() calls the Deal event emission after pushing a card to the house's cards array using Deck.deal(). An attacker can potentially re-enter the function after the card is added but before the Deal event is emitted, leading to unexpected behavior and potential loss of funds."
+      }
+    ]
+  }
+}

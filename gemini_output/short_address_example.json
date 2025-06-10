@@ -1,0 +1,46 @@
+{
+  "contract": "MyToken.sol",
+  "tool": "mythril",
+  "start": 1698787200,
+  "end": 1698787260,
+  "duration": 60,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "MyToken.sol",
+        "function": "MyToken()",
+        "lineno": 9,
+        "code": "balances[tx.origin] = 10000;",
+        "title": "Use of tx.origin",
+        "type": "Warning",
+        "description": "The contract uses tx.origin to set the initial balance. tx.origin is vulnerable to phishing attacks. If an attacker can trick a user into calling a malicious contract, and that contract then calls this contract, tx.origin will be the address of the user. This can lead to unexpected behavior and security vulnerabilities.",
+        "address": 9,
+        "debug": "The constructor initializes the balance of tx.origin to 10000. An attacker can create a contract that calls MyToken.MyToken() through a user transaction and get initial balance"
+      },
+      {
+        "filename": "MyToken.sol",
+        "function": "sendCoin(address,uint256)",
+        "lineno": 13,
+        "code": "balances[msg.sender] -= amount;",
+        "title": "Integer Underflow",
+        "type": "Warning",
+        "description": "The subtraction operation `balances[msg.sender] -= amount` (line 13) can result in an integer underflow if `amount` is greater than `balances[msg.sender]`. This could allow an attacker to drain funds from other accounts by underflowing their own balance to a very large number.",
+        "address": 13,
+        "debug": "If amount > balances[msg.sender] then balances[msg.sender] will underflow and become a very large number."
+      },
+      {
+        "filename": "MyToken.sol",
+        "function": "sendCoin(address,uint256)",
+        "lineno": 14,
+        "code": "balances[to] += amount;",
+        "title": "Integer Overflow",
+        "type": "Warning",
+        "description": "The addition operation `balances[to] += amount` (line 14) can result in an integer overflow if `balances[to] + amount` exceeds the maximum value of a `uint`. This could lead to unexpected behavior and vulnerabilities.",
+        "address": 14,
+        "debug": "If balances[to] + amount > MAX_UINT then balances[to] will overflow and become a small number."
+      }
+    ]
+  }
+}

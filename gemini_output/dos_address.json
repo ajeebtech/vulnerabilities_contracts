@@ -1,0 +1,35 @@
+{
+  "contract": "DosGas.sol",
+  "tool": "mythril",
+  "start": 1702297292,
+  "end": 1702297292,
+  "duration": 0,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "DosGas.sol",
+        "function": "addCreditors()",
+        "lineno": 17,
+        "code": "creditorAddresses.push(msg.sender);",
+        "title": "Denial of Service",
+        "type": "Warning",
+        "description": "The function `addCreditors()` adds `msg.sender` to the `creditorAddresses` array 350 times in a loop. This can lead to a Denial of Service (DoS) vulnerability. Repeated calls to `addCreditors()` can increase the size of `creditorAddresses` array significantly, potentially exceeding gas limits when other functions, like `emptyCreditors()`, iterate over it. Specifically, the `emptyCreditors()` function might consume excessive gas and revert if `creditorAddresses` becomes too large.",
+        "address": 17,
+        "debug": "The loop in `addCreditors()` has a fixed number of iterations (350), which can lead to excessive gas consumption if called repeatedly. The `emptyCreditors` function attempts to clear the entire array, and if it is sufficiently large it could run out of gas."
+      },
+      {
+        "filename": "DosGas.sol",
+        "function": "emptyCreditors()",
+        "lineno": 9,
+        "code": "if(creditorAddresses.length>1500) {",
+        "title": "Denial of Service",
+        "type": "Warning",
+        "description": "The function `emptyCreditors()` contains a potential denial of service vulnerability. If the length of `creditorAddresses` is greater than 1500, it resets the array to a new array of length 0. The gas cost of clearing a large array in this way grows linearly with the size of the array. If the array becomes sufficiently large (e.g., many thousands of elements), the gas cost of `emptyCreditors()` will exceed the block gas limit, rendering the function unusable. This could prevent the contract from functioning correctly if it relies on emptying the `creditorAddresses` array.",
+        "address": 9,
+        "debug": "The `emptyCreditors` function clears a potentially very large array. If the size of the array exceeds a certain limit, the function will revert due to out-of-gas."
+      }
+    ]
+  }
+}

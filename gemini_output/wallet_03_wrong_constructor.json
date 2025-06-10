@@ -1,0 +1,35 @@
+{
+  "contract": "Wallet.sol",
+  "tool": "mythril",
+  "start": 1698760320,
+  "end": 1698760321,
+  "duration": 1,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "Wallet.sol",
+        "function": "initWallet()",
+        "lineno": 12,
+        "code": "creator = msg.sender;",
+        "title": "Access control vulnerability",
+        "type": "Warning",
+        "description": "The function `initWallet()` is public and can be called by anyone. This allows an attacker to overwrite the `creator` address, potentially gaining unauthorized access to privileged functions like `migrateTo()`.",
+        "address": 12,
+        "debug": "Anyone can call initWallet() and set the creator to their address, then they can call migrateTo()"
+      },
+      {
+        "filename": "Wallet.sol",
+        "function": "withdraw(uint256)",
+        "lineno": 20,
+        "code": "msg.sender.transfer(amount);",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The function `withdraw(uint256 amount)` transfers Ether to the caller and then updates the balance. If the transfer fails (e.g., due to a fallback function consuming too much gas or a reentrancy attack), the user's balance will still be decremented, leading to a potential loss of funds.",
+        "address": 20,
+        "debug": "The contract updates the balance after transferring ETH to the user, making it vulnerable to reentrancy attacks. An attacker can recursively call the withdraw function in the fallback function to drain the contract."
+      }
+    ]
+  }
+}

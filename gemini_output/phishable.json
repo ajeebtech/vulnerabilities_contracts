@@ -1,0 +1,46 @@
+{
+  "contract": "Phishable",
+  "tool": "mythril",
+  "start": 1698787200,
+  "end": 1698787210,
+  "duration": 10,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "Phishable.sol",
+        "function": "withdrawAll(address)",
+        "lineno": 13,
+        "code": "require(tx.origin == owner);",
+        "title": "Use of tx.origin",
+        "type": "Warning",
+        "description": "The function `withdrawAll(address)` uses `tx.origin` to check the owner.  `tx.origin` can be spoofed by a malicious contract.  An attacker can create a contract that calls the vulnerable contract, effectively bypassing the owner check. This allows an attacker to withdraw all funds even if they are not the intended owner.",
+        "address": 13,
+        "debug": "tx.origin is used to check ownership, which is susceptible to being spoofed by a contract."
+      },
+      {
+        "filename": "Phishable.sol",
+        "function": "withdrawAll(address)",
+        "lineno": 14,
+        "code": "_recipient.transfer(this.balance);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The function `withdrawAll(address)` calls `transfer` on `_recipient` without checking the return value. If the transfer fails (e.g., due to the recipient contract rejecting the Ether), the function will continue to execute as if the transfer was successful. This can lead to unexpected state changes and potential loss of funds if the `_recipient` is a contract that reverts on receiving Ether.",
+        "address": 14,
+        "debug": "The transfer function does not check the return value. A failed transfer (e.g., due to out-of-gas or a revert in the receiver's fallback function) will not be detected, which may lead to unexpected behavior and loss of funds."
+      },
+      {
+        "filename": "Phishable.sol",
+        "function": "()",
+        "lineno": 9,
+        "code": "function () public payable {}",
+        "title": "Message call to external contract",
+        "type": "Informational",
+        "description": "The contract has a payable fallback function that does not perform any checks or access control. Any user can send Ether to the contract, which could potentially lead to unexpected behavior or denial-of-service vulnerabilities if not properly managed. It might be best practice to emit an event or have some other logic in the fallback function.",
+        "address": 9,
+        "debug": "The payable fallback function has no logic."
+      }
+    ]
+  }
+}

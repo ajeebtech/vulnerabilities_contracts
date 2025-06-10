@@ -1,0 +1,46 @@
+{
+  "contract": "Lottery.sol",
+  "tool": "mythril",
+  "start": 1701980868,
+  "end": 1701980871,
+  "duration": 3,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "Lottery.sol",
+        "function": "makeBet()",
+        "lineno": 40,
+        "code": "if(!msg.sender.send(msg.value)) {",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The call to msg.sender.send(msg.value) returns a boolean value indicating success or failure. This return value is not checked. If the call fails, the transaction will revert due to the throw statement, but it's better to explicitly handle the failure to avoid unexpected behavior. A failing send() can occur if the recipient is a contract that rejects the ether or if the call runs out of gas.",
+        "address": 40,
+        "debug": "The send() call is not checked for its return value. If the send fails, the intended behavior of the contract might be compromised."
+      },
+      {
+        "filename": "Lottery.sol",
+        "function": "destroy()",
+        "lineno": 52,
+        "code": "suicide(organizer);",
+        "title": "Unchecked low-level call",
+        "type": "Warning",
+        "description": "The suicide function allows the contract to be destroyed and all Ether sent to the organizer. This can lead to unexpected behavior or loss of funds if not carefully managed, especially considering the Ether is sent to the organizer without any checks or validations.",
+        "address": 52,
+        "debug": "The suicide function is a low-level operation that needs careful handling to prevent unintended consequences."
+      },
+      {
+        "filename": "Lottery.sol",
+        "function": "makeBet()",
+        "lineno": 36,
+        "code": "bets.push(Bet(msg.value, block.number, won));",
+        "title": "Dependence on predictable environment variable",
+        "type": "Warning",
+        "description": "The contract uses block.number as a source of randomness. This value is predictable and can be manipulated by miners. An attacker can predict the outcome of the lottery and exploit the contract to win every time. The block.number is used to determine if a bet is a winner, meaning miners or other actors can manipulate block creation to affect the outcome. This affects the correctness of the lottery system.",
+        "address": 36,
+        "debug": "The block.number is predictable and manipulable by miners, making it a poor source of randomness."
+      }
+    ]
+  }
+}

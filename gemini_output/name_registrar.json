@@ -1,0 +1,24 @@
+{
+  "contract": "NameRegistrar.sol",
+  "tool": "mythril",
+  "start": 1701475200,
+  "end": 1701475210,
+  "duration": 10,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "NameRegistrar.sol",
+        "function": "register(bytes32,address)",
+        "lineno": 25,
+        "code": "require(unlocked); // only allow registrations if contract is unlocked",
+        "title": "Access control vulnerability",
+        "type": "Warning",
+        "description": "The `register` function is intended to be access controlled by the `unlocked` state variable. However, the check `require(unlocked)` is placed *after* the state variables `resolve[_name]` and `registeredNameRecord[msg.sender]` have been updated. This allows anyone to modify the contract's state even when it is supposedly locked. A malicious actor could call the `register` function before the contract is 'unlocked' (i.e. while `unlocked == false`) to manipulate `resolve` and `registeredNameRecord` mappings.  If the contract owner intends for these mappings to only be modifiable once the registrar is unlocked, this is a serious vulnerability.",
+        "address": 25,
+        "debug": "The require(unlocked) check occurs after the state is modified."
+      }
+    ]
+  }
+}

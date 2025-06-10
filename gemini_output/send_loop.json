@@ -1,0 +1,46 @@
+{
+  "contract": "Refunder.sol",
+  "tool": "mythril",
+  "start": 1700505600,
+  "end": 1700505610,
+  "duration": 10,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "Refunder.sol",
+        "function": "refundAll()",
+        "lineno": 18,
+        "code": "\t\t\trequire(refundAddresses[x].send(refunds[refundAddresses[x]])); // doubly bad, now a single failure on send will hold up all funds",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The call to refundAddresses[x].send(refunds[refundAddresses[x]]) does not check its return value. If the call fails, the transaction will revert due to the require statement, blocking refunds for all addresses. This can lead to a denial of service if any address is unable to receive funds.",
+        "address": 18,
+        "debug": "refundAddresses[x].send() does not check the boolean return value, leading to potential DoS when a send fails."
+      },
+      {
+        "filename": "Refunder.sol",
+        "function": "refundAll()",
+        "lineno": 18,
+        "code": "\t\t\trequire(refundAddresses[x].send(refunds[refundAddresses[x]])); // doubly bad, now a single failure on send will hold up all funds",
+        "title": "Denial of Service",
+        "type": "Warning",
+        "description": "The `refundAll` function iterates through `refundAddresses` and attempts to send funds to each address. If a send fails (e.g., due to insufficient gas or the recipient being a contract that reverts on receiving funds), the `require` statement will cause the entire transaction to revert. This prevents any subsequent addresses from receiving their refunds, leading to a denial-of-service for valid recipients. Furthermore, the loop's gas cost increases linearly with the number of addresses, potentially exceeding the block's gas limit and halting the refund process entirely.",
+        "address": 18,
+        "debug": "The require statement combined with the loop creates a potential denial of service. If any send fails, the entire transaction reverts."
+      },
+      {
+        "filename": "Refunder.sol",
+        "function": "refundAll()",
+        "lineno": 18,
+        "code": "\t\t\trequire(refundAddresses[x].send(refunds[refundAddresses[x]])); // doubly bad, now a single failure on send will hold up all funds",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The `refundAll` function attempts to send funds to multiple addresses. The state change within the loop relies on the success of external calls using `send()`. If the external call to `refundAddresses[x].send(refunds[refundAddresses[x]])` fails (e.g., due to a malicious recipient contract that reverts on receiving funds, or due to gas limits), the `require` statement will cause the entire transaction to revert. This means no refunds will be processed, even for addresses that could have received funds successfully. The intended state change of refunding the addresses is prevented, causing a denial of service. A malicious actor could manipulate the order of refundAddresses to cause the DoS",
+        "address": 18,
+        "debug": "The state change (potential transfer of funds to address x) occurs after an external call refundAddresses[x].send(). If the call fails, the transaction reverts and all pending refunds are lost."
+      }
+    ]
+  }
+}

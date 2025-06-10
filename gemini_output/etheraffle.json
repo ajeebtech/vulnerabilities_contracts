@@ -1,0 +1,123 @@
+{
+  "contract": "Ethraffle_v4b.sol",
+  "tool": "mythril",
+  "start": 1700000000,
+  "end": 1700000010,
+  "duration": 10,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "Ethraffle_v4b.sol",
+        "function": "buyTickets()",
+        "lineno": 70,
+        "code": "msg.sender.transfer(moneySent);",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The contract accounts state is updated after an external call. Consider that the called contract could re-enter the contract before the state change takes place. This can lead to unintended behavior such as multiple withdrawals.",
+        "address": 70,
+        "debug": "An external call to msg.sender is made after the state variable nextTicket is updated. Reentrancy could lead to incorrect ticket assignment."
+      },
+      {
+        "filename": "Ethraffle_v4b.sol",
+        "function": "chooseWinner()",
+        "lineno": 95,
+        "code": "address winningAddress = contestants[winningNumber].addr;",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The contract accounts state is updated after an external call. Consider that the called contract could re-enter the contract before the state change takes place. This can lead to unintended behavior such as multiple withdrawals.",
+        "address": 95,
+        "debug": "The address of the winning address is fetched and then used in a transfer. Reentrancy could lead to unintended consequences as the state could be changed after the address is fetched but before the transfer occurs."
+      },
+      {
+        "filename": "Ethraffle_v4b.sol",
+        "function": "chooseWinner()",
+        "lineno": 106,
+        "code": "winningAddress.transfer(prize);",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The contract accounts state is updated after an external call. Consider that the called contract could re-enter the contract before the state change takes place. This can lead to unintended behavior such as multiple withdrawals.",
+        "address": 106,
+        "debug": "An external call to winningAddress is made after the state variable nextTicket is updated. Reentrancy could lead to incorrect prize distribution."
+      },
+      {
+        "filename": "Ethraffle_v4b.sol",
+        "function": "getRefund()",
+        "lineno": 125,
+        "code": "msg.sender.transfer(refund);",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The contract accounts state is updated after an external call. Consider that the called contract could re-enter the contract before the state change takes place. This can lead to unintended behavior such as multiple withdrawals.",
+        "address": 125,
+        "debug": "The refund is calculated and then sent to the msg.sender. Reentrancy allows attackers to call getRefund multiple times before the original transfer is completed, potentially withdrawing more than intended."
+      },
+      {
+        "filename": "Ethraffle_v4b.sol",
+        "function": "endRaffle()",
+        "lineno": 138,
+        "code": "contestants[i].addr.transfer(pricePerTicket);",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The contract accounts state is updated after an external call. Consider that the called contract could re-enter the contract before the state change takes place. This can lead to unintended behavior such as multiple withdrawals.",
+        "address": 138,
+        "debug": "In endRaffle(), funds are transferred to each contestant's address. Reentrancy allows attackers to call endRaffle multiple times before the original transfer is completed, potentially withdrawing more than intended."
+      },
+      {
+        "filename": "Ethraffle_v4b.sol",
+        "function": "chooseWinner()",
+        "lineno": 93,
+        "code": "address seed1 = contestants[uint(block.coinbase) % totalTickets].addr;",
+        "title": "Dependence on predictable environment variable",
+        "type": "Warning",
+        "description": "The block.coinbase, block.timestamp and block.number values are predictable and can be manipulated by a malicious miner. Before using these values as sources of randomness, analyze whether miners can extract some advantage from them.",
+        "address": 93,
+        "debug": "Using block.coinbase to determine the winning address makes the lottery vulnerable to miner manipulation."
+      },
+      {
+        "filename": "Ethraffle_v4b.sol",
+        "function": "chooseWinner()",
+        "lineno": 95,
+        "code": "uint winningNumber = uint(randHash) % totalTickets;",
+        "title": "Dependence on predictable environment variable",
+        "type": "Warning",
+        "description": "The block.coinbase, block.timestamp and block.number values are predictable and can be manipulated by a malicious miner. Before using these values as sources of randomness, analyze whether miners can extract some advantage from them.",
+        "address": 95,
+        "debug": "Using block.difficulty to determine the winning number makes the lottery vulnerable to miner manipulation. Also seed1 and seed2 are derived from addresses of contestants, which gives more influence of choosing the winning number to the first come, first serve players."
+      },
+      {
+        "filename": "Ethraffle_v4b.sol",
+        "function": "buyTickets()",
+        "lineno": 53,
+        "code": "while (moneySent >= pricePerTicket && nextTicket < totalTickets) {",
+        "title": "Denial of Service",
+        "type": "Warning",
+        "description": "The contract has a loop that iterates while moneySent is greater or equal than pricePerTicket and nextTicket is less than totalTickets. If pricePerTicket is set to zero the loop might never terminate, blocking the execution of the contract.",
+        "address": 53,
+        "debug": "The while loop in buyTickets() could potentially lead to a denial of service if pricePerTicket is zero or very small, consuming all gas."
+      },
+      {
+        "filename": "Ethraffle_v4b.sol",
+        "function": "getRefund()",
+        "lineno": 118,
+        "code": "for (uint i = 0; i < totalTickets; i++) {",
+        "title": "Denial of Service",
+        "type": "Warning",
+        "description": "The contract has a loop that iterates a fixed number of times. It could spend too much gas blocking the execution of the contract.",
+        "address": 118,
+        "debug": "The for loop in getRefund() iterates up to totalTickets which can potentially exceed gas limits if totalTickets is too high."
+      },
+      {
+        "filename": "Ethraffle_v4b.sol",
+        "function": "endRaffle()",
+        "lineno": 135,
+        "code": "for (uint i = 0; i < totalTickets; i++) {",
+        "title": "Denial of Service",
+        "type": "Warning",
+        "description": "The contract has a loop that iterates a fixed number of times. It could spend too much gas blocking the execution of the contract.",
+        "address": 135,
+        "debug": "The for loop in endRaffle() iterates up to totalTickets which can potentially exceed gas limits if totalTickets is too high."
+      }
+    ]
+  }
+}

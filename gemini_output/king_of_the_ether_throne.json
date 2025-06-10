@@ -1,0 +1,68 @@
+{
+  "contract": "KingOfTheEtherThrone.sol",
+  "tool": "mythril",
+  "start": 1702224000,
+  "end": 1702224010,
+  "duration": 10,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "KingOfTheEtherThrone.sol",
+        "function": "claimThrone(string)",
+        "lineno": 93,
+        "code": "msg.sender.send(valuePaid);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The call to msg.sender.send(valuePaid) at KingOfTheEtherThrone.sol#93 does not check its return value. If the transfer fails, the caller will not be notified, potentially leading to unexpected behavior.  It's recommended to check the return value of send() to handle potential failures and revert the transaction if necessary.  This could lead to loss of funds if the sender assumes the refund was successful.",
+        "address": 93,
+        "debug": "Unchecked return value from send(). Potential denial of service if transfer fails."
+      },
+      {
+        "filename": "KingOfTheEtherThrone.sol",
+        "function": "claimThrone(string)",
+        "lineno": 99,
+        "code": "msg.sender.send(excessPaid);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The call to msg.sender.send(excessPaid) at KingOfTheEtherThrone.sol#99 does not check its return value. If the transfer fails, the caller will not be notified, potentially leading to unexpected behavior. It's recommended to check the return value of send() to handle potential failures and revert the transaction if necessary. This could lead to loss of funds if the sender assumes the refund was successful.",
+        "address": 99,
+        "debug": "Unchecked return value from send(). Potential denial of service if transfer fails."
+      },
+      {
+        "filename": "KingOfTheEtherThrone.sol",
+        "function": "claimThrone(string)",
+        "lineno": 113,
+        "code": "currentMonarch.etherAddress.send(compensation);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The call to currentMonarch.etherAddress.send(compensation) at KingOfTheEtherThrone.sol#113 does not check its return value. If the transfer fails, the caller will not be notified, potentially leading to unexpected behavior. It's recommended to check the return value of send() to handle potential failures and revert the transaction if necessary. This could lead to loss of funds if the intended recipient is a contract that rejects the transfer.",
+        "address": 113,
+        "debug": "Unchecked return value from send(). Potential denial of service if transfer fails."
+      },
+      {
+        "filename": "KingOfTheEtherThrone.sol",
+        "function": "claimThrone(string)",
+        "lineno": 111,
+        "code": "uint compensation = valuePaid - wizardCommission;",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The contract performs an external call to `currentMonarch.etherAddress.send(compensation)` at KingOfTheEtherThrone.sol#113, after calculating `compensation` at KingOfTheEtherThrone.sol#111.  A reentrancy attack could occur if `currentMonarch.etherAddress` is a malicious contract.  The malicious contract could call back into claimThrone(), potentially leading to unexpected state changes and loss of funds. To prevent this, apply the 'checks-effects-interactions' pattern: Perform all checks before any state changes, then make state changes, and finally, interact with other contracts.",
+        "address": 111,
+        "debug": "Potential reentrancy vulnerability due to state change before external call."
+      },
+      {
+        "filename": "KingOfTheEtherThrone.sol",
+        "function": "sweepCommission(uint256)",
+        "lineno": 166,
+        "code": "wizardAddress.send(amount);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The call to wizardAddress.send(amount) at KingOfTheEtherThrone.sol#166 does not check its return value. If the transfer fails, the caller will not be notified, potentially leading to unexpected behavior. It's recommended to check the return value of send() to handle potential failures and revert the transaction if necessary. If the wizardAddress is a contract that rejects the transfer, funds will be lost.",
+        "address": 166,
+        "debug": "Unchecked return value from send(). Potential denial of service if transfer fails."
+      }
+    ]
+  }
+}

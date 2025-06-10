@@ -1,0 +1,35 @@
+{
+  "contract": "Missing.sol",
+  "tool": "mythril",
+  "start": 1698787200,
+  "end": 1698787210,
+  "duration": 10,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "Missing.sol",
+        "function": "withdraw()",
+        "lineno": 22,
+        "code": "owner.transfer(this.balance);",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The function `withdraw()` sends ether to the owner. The transfer operation can fail, potentially reverting the transaction and blocking withdrawals. Also, the owner may be a contract that triggers a fallback function upon receiving ether, which could lead to a reentrancy attack if the state of the contract is changed after the ether is sent. It is recommended to follow the check-effects-interactions pattern to mitigate reentrancy vulnerabilities.",
+        "address": 22,
+        "debug": "The transfer to `owner` at line 22 could trigger a reentrancy. Ensure that no state change is performed after the call to `transfer()`."
+      },
+      {
+        "filename": "Missing.sol",
+        "function": "withdraw()",
+        "lineno": 22,
+        "code": "owner.transfer(this.balance);",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The function `withdraw()` at Missing.sol#22 executes a `transfer()` call to the contract owner. The return value of this call is not checked. If the transfer fails, the transaction will revert, potentially locking funds in the contract if the contract does not have a mechanism to handle failed transfers and retry them. This could result in a denial-of-service.",
+        "address": 22,
+        "debug": "The call to `transfer()` at Missing.sol#22 does not check its return value. Ensure that transfer successes or failures are properly handled to prevent unexpected behavior."
+      }
+    ]
+  }
+}

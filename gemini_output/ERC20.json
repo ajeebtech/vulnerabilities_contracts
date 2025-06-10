@@ -1,0 +1,12 @@
+{
+  "contract": "ERC20.sol",
+  "tool": "mythril",
+  "start": 1705433583,
+  "end": 1705433584,
+  "duration": 1,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": []
+  }
+}

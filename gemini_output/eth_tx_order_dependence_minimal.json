@@ -1,0 +1,35 @@
+{
+  "contract": "EthTxOrderDependenceMinimal.sol",
+  "tool": "mythril",
+  "start": 1698787200,
+  "end": 1698787260,
+  "duration": 60,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "EthTxOrderDependenceMinimal.sol",
+        "function": "setReward()",
+        "lineno": 16,
+        "code": "owner.transfer(reward);",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The function `setReward()` sends ether to `owner` before updating the state variable `reward`. An attacker can exploit this through reentrancy. If the `owner` is a malicious contract, it can call `setReward()` again during the ether transfer, potentially draining the contract of funds or causing unexpected behavior. The impact of this vulnerability is high, potentially leading to loss of ether.",
+        "address": 16,
+        "debug": "The vulnerability is located on line 16 where the contract sends `reward` amount of ethers to the contract owner. Before updating the contract state, it makes an external call `owner.transfer(reward)` that can be exploited by a malicious contract owner to re-enter the function. During the re-entry, the state variable `claimed` is still false and can be manipulated."
+      },
+      {
+        "filename": "EthTxOrderDependenceMinimal.sol",
+        "function": "claimReward(uint256)",
+        "lineno": 24,
+        "code": "msg.sender.transfer(reward);",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The function `claimReward(uint256)` sends ether to `msg.sender` before updating the state variable `claimed`. An attacker can exploit this through reentrancy. If the `msg.sender` is a malicious contract, it can call `claimReward(uint256)` again during the ether transfer, potentially draining the contract of funds or causing unexpected behavior. The impact of this vulnerability is high, potentially leading to loss of ether.",
+        "address": 24,
+        "debug": "The vulnerability is located on line 24 where the contract sends `reward` amount of ethers to the contract owner. Before updating the contract state, it makes an external call `msg.sender.transfer(reward)` that can be exploited by a malicious contract owner to re-enter the function. During the re-entry, the state variable `claimed` is still false and can be manipulated."
+      }
+    ]
+  }
+}

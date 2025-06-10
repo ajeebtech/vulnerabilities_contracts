@@ -1,0 +1,35 @@
+{
+  "contract": "Reentrance",
+  "tool": "mythril",
+  "start": 1698750000,
+  "end": 1698750010,
+  "duration": 10,
+  "analysis": {
+    "success": true,
+    "error": null,
+    "issues": [
+      {
+        "filename": "Reentrance.sol",
+        "function": "withdraw(uint256)",
+        "lineno": 17,
+        "code": "if(msg.sender.call.value(_amount)()) {",
+        "title": "State change after external call",
+        "type": "Warning",
+        "description": "The contract's state is updated after an external call. An attacker can use a reentrancy attack to drain the contract's funds. Function: `withdraw(uint256)` calls `msg.sender.call.value(_amount)()`, and updates the `balances` mapping afterwards. This allows an attacker to call the `withdraw` function recursively before the balance is updated, leading to multiple withdrawals exceeding the intended amount.",
+        "address": 17,
+        "debug": "External call to msg.sender in withdraw(uint256) can trigger a reentrancy attack."
+      },
+      {
+        "filename": "Reentrance.sol",
+        "function": "withdraw(uint256)",
+        "lineno": 17,
+        "code": "if(msg.sender.call.value(_amount)()) {",
+        "title": "Unchecked CALL return value",
+        "type": "Warning",
+        "description": "The return value of an external call is not checked. If the call fails, the transaction will not revert, potentially leading to unexpected state changes. The call `msg.sender.call.value(_amount)()` in function `withdraw(uint256)` is not checked for success, which could lead to incorrect balance updates if the call fails but the contract proceeds as if it succeeded.",
+        "address": 17,
+        "debug": "The return value of the call to msg.sender.call.value(_amount)() is not checked."
+      }
+    ]
+  }
+}
